@@ -18,24 +18,10 @@ public struct ConsoleLogger: Logger {
     
     public var squelchLevel: LogLevel = .info
     
-    public var subjectConverters: [(Any) -> (String?)] = [
-        { subject -> String? in
-            guard let subject = subject as? CustomStringConvertible else { return nil }
-            let described = subject.description
-            return described
-        },
-        { subject -> String? in
-            guard let subject = subject as? Encodable else { return nil }
-            let coder = JSONEncoder()
-            guard let encoded = try? coder.encode(subject), let encodedString = String(data: encoded, encoding: .utf8) else {
-                return nil
-            }
-            return encodedString
-        },
-        { subject -> String? in
-            let described = String(describing: subject)
-            return described
-        }
+    public var subjectConverters: [SubjectConverter] = [
+        CustomStringConvertableSubjectConverter(),
+        EncodableSubjectConverter(),
+        DefaultSubjectConverter()
     ]
     
     public init(outputFunction: @escaping (String) -> Void) {
@@ -61,7 +47,7 @@ public struct ConsoleLogger: Logger {
         
         if let subject {
             for converter in subjectConverters {
-                if let converted = converter(subject) {
+                if let converted = converter.convert(subject) {
                     components.append("Subject: \(converted)")
                     break
                 }
