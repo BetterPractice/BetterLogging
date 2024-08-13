@@ -13,15 +13,15 @@ public protocol Logger {
 
 extension Logger {
 
-    func log(_ message: @autoclosure () -> String) {
+    public func log(_ message: @autoclosure () -> String) {
         log(level: .info, message(), subject: nil)
     }
     
-    func log(_ message: @autoclosure () -> String, subject: Any?) {
+    public func log(_ message: @autoclosure () -> String, subject: Any?) {
         log(level: .info, message(), subject: subject)
     }
     
-    func log(level: LogLevel, _ message: @autoclosure () -> String) {
+    public func log(level: LogLevel, _ message: @autoclosure () -> String) {
         log(level: level, message(), subject: nil)
     }
 }
