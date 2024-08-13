@@ -24,7 +24,7 @@ public struct ConsoleLogger: Logger {
         DefaultSubjectConverter()
     ]
     
-    public init(outputFunction: @escaping (String) -> Void) {
+    public init(outputFunction: @escaping (String) -> Void = { print($0) }) {
         self.outputFunction = outputFunction
     }
     
